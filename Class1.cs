@@ -26,12 +26,12 @@ namespace csharp_biblioteca
 
     public class Document
     {
-        public string Id { get; protected set; }
-        public string Title { get; protected set; }
-        public uint Year { get; protected set; }
-        public string Section { get; protected set; }
-        public string Shelf { get; protected set; }
-        public string Author { get; protected set; }
+        public string Id { get; set; }
+        public string Title { get; set; }
+        public uint Year { get; set; }
+        public string Section { get; set; }
+        public string Shelf { get; set; }
+        public string Author { get; set; }
 
         public Document(string id, string title, uint year, string section, string shelf, string author)
         {
@@ -46,7 +46,7 @@ namespace csharp_biblioteca
 
     public class Book : Document
     {
-        public uint NumberPages { get; protected set; }
+        public uint NumberPages { get; set; }
 
         public Book(string id, string title, uint year, string section, string shelf, string author, uint numberPages) : base(id, title, year, section, shelf, author)
         {
@@ -56,7 +56,7 @@ namespace csharp_biblioteca
 
     public class Dvd : Document
     {
-        public uint Minutes { get; protected set; }
+        public uint Minutes { get; set; }
 
         public Dvd(string id, string title, uint year, string section, string shelf, string author, uint minutes) : base(id, title, year, section, shelf, author)
         {
@@ -91,6 +91,62 @@ namespace csharp_biblioteca
             Books = books;
             Dvd = dvd;
             Users = users;
+        }
+
+        public void Add (User user)
+        {
+            Users.Add(user);
+        }
+        public void Add(Loan loan)
+        {
+            Loans.Add(loan);
+        }
+        public void Add(Book loan)
+        {
+            Books.Add(loan);
+        }
+        public void Add(Dvd dvd)
+        {
+            Dvd.Add(dvd);
+        }
+
+        public IEnumerable<Loan> SearchLoan(string name, string surname)
+        {
+            return Loans.Where(loan => loan.User.Name == name).Where(loan => loan.User.Surname == surname);
+        }
+        public IEnumerable<User> SearchUser(string name, string surname)
+        {
+            return Users.Where(user => user.Name == name).Where(user => user.Surname == surname);
+        }
+        public IEnumerable<Book> SearchBooks(string Id = "", string name = "")
+        {
+            IEnumerable<Book> bookFiltered;
+            bookFiltered = Books.Where(book  => book.Id == Id).Where(book => book.Title == name);
+            if (bookFiltered.Any())
+            {
+                return bookFiltered;
+            }
+            bookFiltered = Books.Where(book => book.Id == Id).Union(Books.Where(book => book.Title == name));
+            if (bookFiltered.Any())
+            {
+                return bookFiltered;
+            }
+            return Books;
+        }
+        public IEnumerable<Dvd> SearchDvd(string Id = "", string name = "")
+        {
+            IEnumerable<Dvd> dvdFiltered;
+            dvdFiltered = Dvd.Where(dvd => dvd.Id == Id).Where(dvd => dvd.Title == name);
+            if (dvdFiltered.Any())
+            {
+                return dvdFiltered;
+            }
+            dvdFiltered = Dvd.Where(dvd => dvd.Id == Id).Union(Dvd.Where(dvd => dvd.Title == name));
+            if (dvdFiltered.Any())
+            {
+                return dvdFiltered;
+            }
+            return Dvd;
         }
     }
 }
