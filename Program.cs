@@ -1,4 +1,5 @@
 ﻿using csharp_biblioteca;
+using System.Xml.Linq;
 
 Library library = new Library
     (
@@ -25,7 +26,6 @@ Library library = new Library
         }
     );
 
-library.Print();
 User? activeUser = null;
 string? controller;
 
@@ -85,10 +85,91 @@ do
             number = Console.ReadLine();
         User newUser = new User(surname, name, email, password, number);
         activeUser = newUser;
-        library.Users.Add(activeUser);
+        library.Add(activeUser);
         Console.WriteLine("Registrato!");
     }
 } while (activeUser == null && controller != "");
 
-
-library.Print();
+controller = null;
+do
+{
+    Console.WriteLine("\nDigita 1 per cercare un documento e prendilo in prestito");
+    Console.WriteLine("Digita 2 per cercare un utente");
+    Console.WriteLine("Digita 3 per cercare un prestito");
+    Console.WriteLine("Digita 4 per cercare un vedere tutta la libreria");
+    Console.WriteLine("Digita qualcos'altro per chiudere il programma");
+    Console.WriteLine("Cosa vuoi fare?");
+    controller = Console.ReadLine();
+    switch (controller)
+    {
+        case "1":
+            {
+                string? titleFilter=null, idFilter=null;
+                Console.WriteLine("Scrivi l'id del documento che vuoi cercare");
+                while (idFilter == null)
+                    idFilter = Console.ReadLine();
+                Console.WriteLine("Scrivi il titolo del documento che vuoi cercare");
+                while (titleFilter == null)
+                    titleFilter = Console.ReadLine();
+                IEnumerable<Document> result = library.SearchDocument(idFilter, titleFilter);
+                Document docDesired;
+                if (result!=null)
+                {
+                    Console.WriteLine("Ecco i risultati:");
+                    foreach (Document doc in result)
+                        doc.Print();
+                    Console.WriteLine("Vuoi prenderne uno in prestito? (Digita la posizione di quello che vuoi prenotare. Altri input ti faranno uscire dal menù)");
+                    int n;
+                    if(int.TryParse(Console.ReadLine(), out n)){
+                        if (n > 0 && n <= result.Count())
+                        {
+                            docDesired = result.ElementAt(n-1);
+                            library.Add(new Loan (activeUser, docDesired));
+                            Console.WriteLine("Preso in prestito!");
+                        }
+                    }
+                }
+                else Console.WriteLine("No result found");
+            };
+        break;
+        case "2":
+            {
+                string? nameFilter = null, surnameFilter = null;
+                Console.WriteLine("Scrivi il nome di chi vuoi cercare");
+                while (nameFilter == null)
+                    nameFilter = Console.ReadLine();
+                Console.WriteLine("Scrivi il cognome di chi vuoi cercare");
+                while (surnameFilter == null)
+                    surnameFilter = Console.ReadLine();
+                IEnumerable<User> result = library.SearchUser(nameFilter, surnameFilter);
+                if (result.Any())
+                    foreach (User user in result)
+                        user.Print();
+                else Console.WriteLine("No result found");
+            };
+         break;
+         case "3":
+            {
+                string? nameFilter = null, surnameFilter = null;
+                Console.WriteLine("Scrivi il nome di chi vuoi cercare il prestito");
+                while (nameFilter == null)
+                    nameFilter = Console.ReadLine();
+                Console.WriteLine("Scrivi il cognome di chi vuoi cercare il prestito");
+                while (surnameFilter == null)
+                    surnameFilter = Console.ReadLine();
+                IEnumerable<Loan> result = library.SearchLoan(nameFilter, surnameFilter);
+                if (result.Any())
+                    foreach (Loan loan in result)
+                        loan.Print();
+                else Console.WriteLine("No result found");
+            };
+         break;
+         case "4":
+            {
+                library.Print();
+            };
+         break;
+         default: controller = null;
+         break;
+    }
+} while (controller != null);

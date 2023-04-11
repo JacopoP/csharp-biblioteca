@@ -90,11 +90,11 @@ namespace csharp_biblioteca
         public Document Document { get; set; }
         public string TimeSpan { get; set; }
 
-        public Loan(User user, Document document, string timeSpan)
+        public Loan(User user, Document document)
         {
             User = user;
             Document = document;
-            TimeSpan = timeSpan;
+            TimeSpan = "una settimana da ora";
         }
 
         public void Print()
@@ -138,7 +138,7 @@ namespace csharp_biblioteca
         {
             return Users.Where(user => user.Name == name).Where(user => user.Surname == surname);
         }
-        public IEnumerable<Document> searchDocument(string Id = "", string name = "")
+        public IEnumerable<Document> SearchDocument(string Id, string name)
         {
             IEnumerable<Document> decumentFilterd;
             decumentFilterd = Documents.Where(book  => book.Id == Id).Where(book => book.Title == name);
@@ -151,7 +151,8 @@ namespace csharp_biblioteca
             {
                 return decumentFilterd;
             }
-            return Documents;
+
+            return default;
         }
 
         public void Print()
