@@ -22,6 +22,11 @@ namespace csharp_biblioteca
             Password = password;
             PhoneNumber = phoneNumber;
         }
+
+        public void Print()
+        {
+            Console.WriteLine($"Nome: {Name}, Cognome: {Surname}, Email: {Email}, Numero di telefono: {PhoneNumber}");
+        }
     }
 
     public class Document
@@ -42,6 +47,11 @@ namespace csharp_biblioteca
             Shelf = shelf;
             Author = author;
         }
+
+        public virtual void Print()
+        {
+            Console.Write($"Titolo: {Title}, Id: {Id}, Anno: {Year}, Sezione: {Section}, Scaffale: {Shelf}, Autore: {Author}");
+        }
     }
 
     public class Book : Document
@@ -52,6 +62,11 @@ namespace csharp_biblioteca
         {
             NumberPages = numberPages;
         }
+        public override void Print()
+        {
+            base.Print();
+            Console.WriteLine($", Pagine: {NumberPages}");
+        }
     }
 
     public class Dvd : Document
@@ -61,6 +76,11 @@ namespace csharp_biblioteca
         public Dvd(string id, string title, uint year, string section, string shelf, string author, uint minutes) : base(id, title, year, section, shelf, author)
         {
             Minutes = minutes;
+        }
+        public override void Print()
+        {
+            base.Print();
+            Console.WriteLine($", Durata: {Minutes}m");
         }
     }
 
@@ -75,6 +95,11 @@ namespace csharp_biblioteca
             User = user;
             Document = document;
             TimeSpan = timeSpan;
+        }
+
+        public void Print()
+        {
+            Console.WriteLine($"Utente: {User.Name} {User.Surname}, Id documento: {Document.Id}, Periodo prestito: {TimeSpan}");
         }
     }
 
@@ -91,6 +116,7 @@ namespace csharp_biblioteca
             Books = books;
             Dvd = dvd;
             Users = users;
+            Loans = new List<Loan>();
         }
 
         public void Add (User user)
@@ -147,6 +173,30 @@ namespace csharp_biblioteca
                 return dvdFiltered;
             }
             return Dvd;
+        }
+
+        public void Print()
+        {
+            Console.WriteLine("Users:");
+            foreach (User user in Users)
+            {
+                user.Print();
+            }
+            Console.WriteLine("Libri:");
+            foreach (Book book in Books)
+            {
+                book.Print();
+            }
+            Console.WriteLine("Libri:");
+            foreach (Dvd dvd in Dvd)
+            {
+                dvd.Print();
+            }
+            Console.WriteLine("Prestiti:");
+            foreach (Loan loan in Loans)
+            {
+                loan.Print();
+            }
         }
     }
 }
