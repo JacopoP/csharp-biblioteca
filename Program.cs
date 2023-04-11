@@ -28,4 +28,71 @@ Library library = new Library
         }
     );
 
+//library.Print();
+
+User? activeUser = null;
+string? controller;
+
+do
+{
+    Console.WriteLine("Sei registrato? (S/N). Invio per uscire");
+
+    controller = Console.ReadLine();
+    if (controller == "S")
+    {
+        Console.WriteLine("Inserisci la tua email per accedere. Invio per tornare indietro");
+        string inputMail;
+        User? user;
+        do
+        {
+            inputMail = Console.ReadLine();
+            user = library.Users.Find(x => x.Email == inputMail);
+            if(user == null && inputMail != "")
+                Console.WriteLine("Email non trovata. Riprovare o premere invio per tornare indietro");
+        } while (inputMail != "" && user == null);
+        if(user != null)
+        {
+            Console.WriteLine("Inserisci la password");
+            if (user.Password == Console.ReadLine())
+            {
+                activeUser = user;
+                Console.WriteLine($"Benvenut* {activeUser.Name} {activeUser.Surname}");
+            }
+            else
+            {
+                Console.WriteLine("Password errata");
+            }
+        }
+    }
+    else
+    {
+        Console.WriteLine("Inserisci i tuoi dati per registrarti");
+        string? name = null;
+        string? surname = null;
+        string? email = null;
+        string? password = null;
+        string? number = null;
+        Console.WriteLine("Nome:");
+        while (name == null)
+            name = Console.ReadLine();
+        Console.WriteLine("Cognome:");
+        while (surname == null)
+            surname = Console.ReadLine();
+        Console.WriteLine("Email:");
+        while (email == null)
+            email = Console.ReadLine();
+        Console.WriteLine("Password:");
+        while (password == null)
+            password = Console.ReadLine();
+        Console.WriteLine("Numero di telefono:");
+        while (number == null)
+            number = Console.ReadLine();
+        User newUser = new User(surname, name, email, password, number);
+        activeUser = newUser;
+        library.Users.Add(activeUser);
+        Console.WriteLine("Registrato!");
+    }
+} while (activeUser == null && controller != "");
+
+
 library.Print();
