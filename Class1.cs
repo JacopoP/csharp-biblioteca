@@ -105,16 +105,14 @@ namespace csharp_biblioteca
 
     public class Library
     {
-        public List<Book> Books { get; private set; }
-        public List<Dvd> Dvd { get; private set; }
+        public List<Document> Documents { get; private set; }
         public List<User> Users { get; private set; }
 
         public List<Loan> Loans { get; private set; }
 
-        public Library (List<Book> books, List<Dvd> dvd, List<User> users)
+        public Library (List<Document> documents, List<User> users)
         {
-            Books = books;
-            Dvd = dvd;
+            Documents = documents;
             Users = users;
             Loans = new List<Loan>();
         }
@@ -127,13 +125,9 @@ namespace csharp_biblioteca
         {
             Loans.Add(loan);
         }
-        public void Add(Book loan)
+        public void Add(Document document)
         {
-            Books.Add(loan);
-        }
-        public void Add(Dvd dvd)
-        {
-            Dvd.Add(dvd);
+            Documents.Add(document);
         }
 
         public IEnumerable<Loan> SearchLoan(string name, string surname)
@@ -144,35 +138,20 @@ namespace csharp_biblioteca
         {
             return Users.Where(user => user.Name == name).Where(user => user.Surname == surname);
         }
-        public IEnumerable<Book> SearchBooks(string Id = "", string name = "")
+        public IEnumerable<Document> searchDocument(string Id = "", string name = "")
         {
-            IEnumerable<Book> bookFiltered;
-            bookFiltered = Books.Where(book  => book.Id == Id).Where(book => book.Title == name);
-            if (bookFiltered.Any())
+            IEnumerable<Document> decumentFilterd;
+            decumentFilterd = Documents.Where(book  => book.Id == Id).Where(book => book.Title == name);
+            if (decumentFilterd.Any())
             {
-                return bookFiltered;
+                return decumentFilterd;
             }
-            bookFiltered = Books.Where(book => book.Id == Id).Union(Books.Where(book => book.Title == name));
-            if (bookFiltered.Any())
+            decumentFilterd = Documents.Where(document => document.Id == Id).Union(Documents.Where(document => document.Title == name));
+            if (decumentFilterd.Any())
             {
-                return bookFiltered;
+                return decumentFilterd;
             }
-            return Books;
-        }
-        public IEnumerable<Dvd> SearchDvd(string Id = "", string name = "")
-        {
-            IEnumerable<Dvd> dvdFiltered;
-            dvdFiltered = Dvd.Where(dvd => dvd.Id == Id).Where(dvd => dvd.Title == name);
-            if (dvdFiltered.Any())
-            {
-                return dvdFiltered;
-            }
-            dvdFiltered = Dvd.Where(dvd => dvd.Id == Id).Union(Dvd.Where(dvd => dvd.Title == name));
-            if (dvdFiltered.Any())
-            {
-                return dvdFiltered;
-            }
-            return Dvd;
+            return Documents;
         }
 
         public void Print()
@@ -183,14 +162,9 @@ namespace csharp_biblioteca
                 user.Print();
             }
             Console.WriteLine("Libri:");
-            foreach (Book book in Books)
+            foreach (Document doc in Documents)
             {
-                book.Print();
-            }
-            Console.WriteLine("Libri:");
-            foreach (Dvd dvd in Dvd)
-            {
-                dvd.Print();
+                doc.Print();
             }
             Console.WriteLine("Prestiti:");
             foreach (Loan loan in Loans)
